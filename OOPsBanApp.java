@@ -1,24 +1,11 @@
-public class OOPsBanApp {
-    static class CharacterPatternMap {
-        private char character;
-        private String[] pattern;
 
-        public CharacterPatternMap(char character, String[] pattern) {
-            this.character = character;
-            this.pattern = pattern;
-        }
-        public char getCharacter() {
-            return character;
-        }
-        public String[] getPattern() {
-            return pattern;
-        }
-    }
-    public static CharacterPatternMap[] createCharacterPatternMaps() {
+import java.util.HashMap;
+public class OOPsBanApp{
 
-        CharacterPatternMap[] charMaps = new CharacterPatternMap[5];
+    public static HashMap<Character, String[]> createCharacterMap() {
 
-        charMaps[0] = new CharacterPatternMap('O', new String[]{
+        HashMap<Character, String[]> charMap = new HashMap<>();
+        charMap.put('O', new String[]{
                 " ***** ",
                 "*     *",
                 "*     *",
@@ -27,7 +14,8 @@ public class OOPsBanApp {
                 "*     *",
                 " ***** "
         });
-        charMaps[1] = new CharacterPatternMap('P', new String[]{
+
+        charMap.put('P', new String[]{
                 " ***** ",
                 "*     *",
                 "*     *",
@@ -36,7 +24,8 @@ public class OOPsBanApp {
                 "*      ",
                 "*      "
         });
-        charMaps[2] = new CharacterPatternMap('S', new String[]{
+
+        charMap.put('S', new String[]{
                 " ***** ",
                 "*      ",
                 "*      ",
@@ -46,7 +35,7 @@ public class OOPsBanApp {
                 " ***** "
         });
 
-        charMaps[3] = new CharacterPatternMap(' ', new String[]{
+        charMap.put(' ', new String[]{
                 "   ",
                 "   ",
                 "   ",
@@ -56,45 +45,43 @@ public class OOPsBanApp {
                 "   "
         });
 
-        charMaps[4] = new CharacterPatternMap('o', charMaps[0].getPattern());
-
-        return charMaps;
+        return charMap;
     }
 
-    public static String[] getCharacterPattern(char ch, CharacterPatternMap[] charMaps) {
-
-        for (CharacterPatternMap map : charMaps) {
-            if (map.getCharacter() == ch) {
-                return map.getPattern();
-            }
-        }
-
-        return getCharacterPattern(' ', charMaps);
-    }
-
-
-    public static void printMessage(String message, CharacterPatternMap[] charMaps) {
+    public static void displayBanner(String message,
+                                     HashMap<Character, String[]> charMap) {
 
         message = message.toUpperCase();
 
-        for (int row = 0; row < 7; row++) {
 
-            for (int i = 0; i < message.length(); i++) {
-                char ch = message.charAt(i);
-                String[] pattern = getCharacterPattern(ch, charMaps);
-                System.out.print(pattern[row] + "  ");
+        int patternHeight = charMap.get('O').length;
+
+        for (int line = 0; line < patternHeight; line++) {
+
+            StringBuilder sb = new StringBuilder();
+
+            for (char ch : message.toCharArray()) {
+
+                String[] pattern = charMap.get(ch);
+
+
+                if (pattern == null) {
+                    pattern = charMap.get(' ');
+                }
+
+                sb.append(pattern[line]).append("  ");
             }
 
-            System.out.println();
+            System.out.println(sb.toString());
         }
     }
 
     public static void main(String[] args) {
 
-        CharacterPatternMap[] charMaps = createCharacterPatternMaps();
+        HashMap<Character, String[]> charMap = createCharacterMap();
 
         String message = "OOPS";
 
-        printMessage(message, charMaps);
+        displayBanner(message, charMap);
     }
 }
